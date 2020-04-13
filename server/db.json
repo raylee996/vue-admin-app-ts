@@ -1,9 +1,5 @@
 {
-   "user": [{
-      "id": 1,
-      "name": "lwf",
-      "pwd": 123456
-   }],
+   "user": [],
    "goods": [],
    "members": [],
    "goods": [],
