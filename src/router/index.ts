@@ -7,10 +7,9 @@ const Routes: Array<RouteConfig> = [
   {
     name: "index",
     path: "/",
-    component: () => import(/* webpackChunkName: index */"views/index/index.vue")
+    component: () => import(/* webpackChunkName: "index" */"views/index/index.vue")
   }
 ]
-
 
 export default new VueRouter({
   mode: "history",
