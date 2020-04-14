@@ -1,7 +1,17 @@
 {
-   "user": [],
-   "goods": [],
-   "members": [],
-   "goods": [],
-   "orders": []
+  "user": [
+    {
+      "name": "lwf",
+      "pwd": "123456",
+      "id": 1
+    },
+    {
+      "name": "lwf2",
+      "pwd": "1234567",
+      "id": 2
+    }
+  ],
+  "goods": [],
+  "members": [],
+  "orders": []
 }
