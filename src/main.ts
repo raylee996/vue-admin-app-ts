@@ -1,15 +1,23 @@
+import "@babel/polyfill";
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
 import ElementUI from 'element-ui';
-import axios from "axios";
+import { AxiosInstance } from "axios";
+import axiosInstance from "utils/ajax";
 import "style/reset.css";
 import 'element-ui/lib/theme-chalk/index.css';
 
+declare module "vue/types/vue" {
+  interface Vue {
+    $http: AxiosInstance;
+  }
+}
+
 Vue.use(ElementUI)
 
-Vue.prototype.$http = axios;
+Vue.prototype.$http = axiosInstance;
 
 Vue.config.productionTip = false;
 
@@ -17,5 +25,5 @@ var vm = new Vue({
   router,
   store,
   render: h => h(App)
-})
-vm.$mount('#app')
+});
+vm.$mount('#app');

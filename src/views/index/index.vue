@@ -9,7 +9,8 @@
                     <el-input v-model="formProps.password" show-password></el-input>
                 </el-form-item>
                 <el-form-item prop="remember">
-                    <el-checkbox v-model="formProps.remember" label="记住密码" name="remember"></el-checkbox>
+                    <!-- 做路由拦截 -->
+                    <el-checkbox v-model="formProps.remember" label="自动登录" name="remember"></el-checkbox>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm(1)">登录</el-button>

@@ -10,8 +10,16 @@ module.exports = {
                 "router": path.resolve(__dirname, "src/router"),
                 "components": path.resolve(__dirname, "src/components"),
                 "utils": path.resolve(__dirname, "src/utils"),
-                "api": path.resolve(__dirname, "src/api"),
                 "style": path.resolve(__dirname, "src/style")
+            }
+        }
+    },
+    devServer: {
+        proxy: {
+            "/api": {
+                target: "http://192.168.0.47:8081",
+                pathRewrite: { "^/api": "" },
+                changeOrigin: true
             }
         }
     }
