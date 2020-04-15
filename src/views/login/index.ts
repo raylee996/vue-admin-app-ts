@@ -21,7 +21,7 @@ export default class extends Vue {
         (this.$refs.form as HTMLFormElement).validate(valid => {
             if(valid) {
                 switch(type) {
-                    case 1:
+                    case 1: //登录
                         this.$http.get("/api/user", {
                             params: {
                                 username: this.formProps.username,
@@ -37,14 +37,25 @@ export default class extends Vue {
                                 localStorage.removeItem("password");
                                 localStorage.removeItem("remember");
                             }
-                            
+                            //执行路由跳转
+
                         });
                         break;
-                    case 2:
+                    case 2: //注册
                         this.$http.post("/api/user", {
                             username: this.formProps.username,
                             password: this.formProps.password
                         }).then(res => {
+                            if(this.formProps.remember) {
+                                localStorage.setItem("username", this.formProps.username);
+                                localStorage.setItem("password", this.formProps.password);
+                                localStorage.setItem("remember", this.formProps.remember);
+                            }else {
+                                localStorage.removeItem("username");
+                                localStorage.removeItem("password");
+                                localStorage.removeItem("remember");
+                            }
+                            //执行路由跳转
                             
                         });
                         break;
