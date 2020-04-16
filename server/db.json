@@ -1,17 +1,70 @@
 {
-  "user": [
-    {
-      "name": "lwf",
-      "pwd": "123456",
-      "id": 1
-    },
-    {
-      "name": "lwf2",
-      "pwd": "1234567",
-      "id": 2
-    }
-  ],
-  "goods": [],
-  "members": [],
-  "orders": []
+	"user": [
+		{
+			"id": 1,
+			"username": "liweifan",
+			"password": 123456
+		}
+	],
+	"goods": [{
+		"id": 1,
+		"categorylist": [
+			{
+				"id": 1,
+				"name": "a"
+			},
+			{
+				"id": 2,
+				"name": "b"
+			}
+		]
+	},{
+		"id": 2,
+		"categorylist": [
+			{
+				"id": 1,
+				"name": "aa"
+			},
+			{
+				"id": 2,
+				"name": "bb"
+			}
+		]
+	}],
+	"goodslist": [
+		{
+			"id": 1,
+			"goodsid": 1,
+			"goods": [
+				{
+					"id": 1,
+					"name": "aaa",
+					"price": 123
+				},
+				{
+					"id": 2,
+					"name": "bbb",
+					"price": 123
+				}
+			]
+		},
+		{
+			"id": 1,
+			"goodsid": 2,
+			"goods": [
+				{
+					"id": 1,
+					"name": "aaa",
+					"price": 123
+				},
+				{
+					"id": 2,
+					"name": "bbb",
+					"price": 123
+				}
+			]
+		}
+	],
+	"members": [],
+	"orders": []
 }
