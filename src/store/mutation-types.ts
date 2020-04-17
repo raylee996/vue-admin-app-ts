@@ -1,1 +1,3 @@
-export const SWITCH_INIT:string = "SWITCH_INIT";
+export const SWITCH_INIT = "SWITCH_INIT";
+export const UPDATE_HISTORY_LINK = "UPDATE_HISTORY_LINK";
+export const SET_USERID = "SET_USERID";
