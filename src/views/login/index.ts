@@ -22,7 +22,7 @@ export default class extends Vue {
             if(valid) {
                 switch(type) {
                     case 1: //登录
-                        this.$http.get("/api/user", {
+                        this.$http.get("/api/addUser", {
                             params: {
                                 username: this.formProps.username,
                                 password: this.formProps.password
@@ -42,7 +42,7 @@ export default class extends Vue {
                         });
                         break;
                     case 2: //注册
-                        this.$http.post("/api/user", {
+                        this.$http.post("/api/signUp", {
                             username: this.formProps.username,
                             password: this.formProps.password
                         }).then(res => {

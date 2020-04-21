@@ -1,5 +1,5 @@
 import Vue from "vue";
-import VueRouter, { RouteConfig, NavigationGuard } from "vue-router";
+import VueRouter, { RouteConfig } from "vue-router";
 import store from "store/index";
 import { SWITCH_INIT } from "store/mutation-types";
 
@@ -29,6 +29,7 @@ const Routes: Array<RouteConfig> = [
 ]
 
 const router = new VueRouter({
+	linkActiveClass: "active",
 	mode: "history",
 	routes: Routes
 });
@@ -37,7 +38,7 @@ router.beforeEach((to, from, next) => {
 	if (store.state.init == 0) {
 		store.commit(SWITCH_INIT, 1)
 		if (localStorage.getItem("remember")) {
-			Vue.prototype.$http.get("/api/user", {
+			Vue.prototype.$http.get("/api/signUp", {
 				params: {
 					username: localStorage.getItem("username"),
 					password: localStorage.getItem("password")

@@ -214,8 +214,8 @@ function addProducts(req, res, next) {
 
     });
 }
-router.post('/addProductsCategories', function (req, res, next) {
-    addProductsCategories(req, res, next);
+router.post('/addProducts', function (req, res, next) {
+    addProducts(req, res, next);
 });
 //创建商品结束
 

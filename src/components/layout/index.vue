@@ -1,14 +1,16 @@
 <template>
     <el-container>
-		<el-aside width="250px">
-			<side-nav />
+		<el-aside class="el_side" :class="[asideStatusHidding && 'hideSidebar']">
+			<side-nav :asideStatusHidding="asideStatusHidding" />
 		</el-aside>
 		<el-container>
 			<el-header>
 				<admin-header />
 			</el-header>
 			<el-main>
-				<admin-content />
+				<keep-alive :include="['index'].concat(historyTags)">
+					<router-view></router-view>
+				</keep-alive>
 			</el-main>
 		</el-container>
 	</el-container>
@@ -16,19 +18,42 @@
 
 <script lang='ts'>
 import { Vue, Component } from "vue-property-decorator";
+import {Getter, namespace} from "vuex-class";
 import sideNav from "./sideNav.vue";
 import adminHeader from "./header.vue";
-import adminContent from "./content.vue";
+import eventBus from "utils/eventBus";
+
+const HistoryTagsModule = namespace("historyTags");
 
 @Component({
 	components: {
 		sideNav,
 		adminHeader,
-		adminContent
 	}
 })
-export default class extends Vue {}
+export default class extends Vue {
+	asideStatusHidding: boolean = false;
+	@HistoryTagsModule.Getter("historyTags") historyTags;
+
+	mounted() {
+		(eventBus as any).$on("switchSidebar", status => {
+			this.asideStatusHidding = status;
+		})
+	}
+}
 </script>
 
 <style lang='less' scoped>
+.el_side{
+	position: fixed;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 250px;
+	height: 100%;
+	transition: width .4s;
+	&.hideSidebar{
+		width: 50px;
+	}
+}
 </style>
