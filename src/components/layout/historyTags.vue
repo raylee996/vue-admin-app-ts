@@ -4,10 +4,10 @@
             <router-link key="/" to="/">
                 首页
             </router-link>
-            <router-link :key="item.path" v-for="(item) in historyLink" :to="item.path" v-slot="{ href, route, navigate, isActive }">
+            <router-link :key="item.path" v-for="(item, index) in historyTags" :to="item.path" v-slot="{ href, route, navigate, isActive }">
                 <li :class="[isActive && 'active']">
                     <a :href="href" @click="navigate">{{item.pathname}}</a>
-                    <i class="el-icon-close" @click="updateHistoryTags('delete', {pathname: item.pathname})"></i> <!-- 删除后要显示上一个路由，即要先获取当前路由索引，删除后为空则显示首页 -->
+                    <i class="el-icon-close" @click="switchRoute(index, {type: 'delete', historyTags: {pathname: item.pathname}})"></i> 
                 </li>
             </router-link>
         </ul>
@@ -25,6 +25,19 @@ const HistoryTagsModule = namespace("historyTags");
 export default class extends Vue {
     @State("historyTags") historyTags;
     @HistoryTagsModule.Mutation("updateHistoryTags") updateHistoryTags;
+
+    private switchRoute(index, modulePayload) {
+        if(this.historyTags.length <= 1) {
+            this.$router.replace("/");
+        }else {
+            if(index == 0) {
+                this.$router.replace(this.historyTags[1].path);
+            }else {
+                this.$router.replace(this.historyTags[index-1].path);
+            }
+        }
+        this.updateHistoryTags(modulePayload);
+    }
 }
 </script>
 <style lang='less' scoped>

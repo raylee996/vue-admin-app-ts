@@ -12,13 +12,17 @@ export default {
     },
     mutations: {
         updateHistoryTags(state, payload:historyTagsPayload) {
-            let index = state.historyLink.findIndex(item => item.pathname == payload.historyLink.pathname)
+            let index = state.historyTags.historyTags.findIndex(item => item.pathname == (payload.historyTags as historyTagsConfig).pathname)
             if(payload.type == "add") {
                 if(index == -1) {
-                    state.historyLink.push(payload.historyLink);
+                    state.historyTags.historyTags.push(payload.historyTags);
                 }
+            }else if(payload.type == "delete") {
+                state.historyTags.historyTags.splice(index, 1);
+            }else if(payload.type == "deleteOthers") {
+                state.historyTags.historyTags = [payload.historyTags];
             }else {
-                state.historyLink.splice(index, 1);
+                state.historyTags.historyTags = [];
             }
         }
     }

@@ -4,6 +4,6 @@ export interface historyTagsConfig {
 } 
 
 export interface historyTagsPayload {
-    type: "add" | "delete",
-    historyLink: historyTagsConfig
+    type: "add" | "delete" | "deleteOthers" | "deleteAll",
+    historyTags?: historyTagsConfig
 }
