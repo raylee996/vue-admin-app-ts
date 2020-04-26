@@ -4,7 +4,14 @@ var mysqlconf = {
     database: 'admin',
     password: '101,liweifan',
     port: 3306
-}
+};
+
+var sftpConf = {
+    host: '111.229.220.211',
+    port: '22',
+    username: 'root',
+    password: '101,liweifan'
+};
 
 var express = require('express');
 var logger = require('morgan');
@@ -14,6 +21,9 @@ var app = express();
 
 var mysql = require('mysql');
 var pool = mysql.createPool(mysqlconf);
+
+var Client = require('ssh2-sftp-client');
+var sftp = new Client();
 
 // 向前台返回JSON方法的简单封装
 var jsonWrite = function (res, ret, errmsg = "操作失败") {
@@ -113,7 +123,7 @@ function addProductsCategories(req, res, next) {
     // 获取前台页面传过来的参数
     var param = req.body;
     if (!param.user_id) {
-        jsonWrite(res, undefined, "user_id不能为空");
+        jsonWrite(res, undefined, "参数错误");
         return;
     }
     if (!param.category_name) {
@@ -186,39 +196,38 @@ router.get('/getCategories', function (req, res, next) {
 function addProducts(req, res, next) {
     // 获取前台页面传过来的参数
     var param = req.body;
-    if (!param.user_id) {
-        jsonWrite(res, undefined, "user_id不能为空");
+    if (!param.user_id || !param.category_id) {
+        jsonWrite(res, undefined, "参数错误");
         return;
     }
-    if (!param.category_name) {
-        jsonWrite(res, undefined, "分类名称不能为空");
+    if (!param.product_name) {
+        jsonWrite(res, undefined, "商品名不能为空");
         return;
     }
+    if (!param.stock) {
+        jsonWrite(res, undefined, "库存不能为空");
+        return;
+    }
+    if (!param.price) {
+        jsonWrite(res, undefined, "价格不能为空");
+        return;
+    }
+    var avatar = param.avatar.file;
     pool.getConnection(function (err, connection) {
-        connection.query("select user_id,category_name from products_categories where user_id = '" + param.user_id + "' and category_name = '" + param.category_name + "'", function (err, result) {
-            if (result.length > 0) {
-                jsonWrite(res, undefined, "分类已存在");
-                // 释放连接 
-                connection.release();
-                return;
-            } else {
-                connection.query("INSERT INTO products_categories(user_id, category_name) VALUES(?,?)", [param.user_id, param.category_name], function (err2, result2) {
-                    if (result2) {
-                        result2 = {
-                            code: 1,
-                            msg: '添加成功'
-                        };
-                    }
-
-                    // 以json形式，把操作结果返回给前台页面
-                    jsonWrite(res, result2);
-
-                    // 释放连接 
-                    connection.release();
-                });
+        connection.query("INSERT INTO products_categories(user_id, category_name) VALUES(?,?)", [param.user_id, param.category_name], function (err2, result2) {
+            if (result2) {
+                result2 = {
+                    code: 1,
+                    msg: '添加成功'
+                };
             }
-        })
 
+            // 以json形式，把操作结果返回给前台页面
+            jsonWrite(res, result2);
+
+            // 释放连接 
+            connection.release();
+        });
     });
 }
 router.post('/addProducts', function (req, res, next) {
