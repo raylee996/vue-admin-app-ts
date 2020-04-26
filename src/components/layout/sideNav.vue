@@ -4,6 +4,10 @@
             
         </el-scrollbar>
         <el-scrollbar style="height:100%" v-show="asideStatusHidding"></el-scrollbar>
+
+        <el-menu>
+            
+        </el-menu>
     </div>
 </template>
 

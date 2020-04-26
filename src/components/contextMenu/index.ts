@@ -10,6 +10,17 @@ interface ContextMenuType {
 
 let singleInstance;
 
+document.body.addEventListener("click", function() {
+    if(singleInstance) {
+        singleInstance.remove();
+    }
+})
+document.body.addEventListener("contextmenu", function() {
+    if(singleInstance) {
+        singleInstance.remove();
+    }
+})
+
 let ContextMenuConstructor = Vue.extend(ContextMenu);
 
 ContextMenuConstructor.prototype.bind = function() {
@@ -34,7 +45,7 @@ ContextMenuConstructor.prototype.remove = function() {
 }
 
 export default {
-    service(menuListOptions: Array<contextType>, cbOptions: Object) {
+    service(menuListOptions: Array<contextType>) {
         if(singleInstance) {
             singleInstance.remove();
             singleInstance = undefined;
@@ -43,8 +54,7 @@ export default {
             el: document.createElement("div"),
             data() {
                 return {
-                    menuList: menuListOptions,
-                    cbOptions
+                    menuList: menuListOptions
                 }
             }
         });

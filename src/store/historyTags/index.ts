@@ -13,16 +13,23 @@ export default {
     mutations: {
         updateHistoryTags(state, payload:historyTagsPayload) {
             let index = state.historyTags.historyTags.findIndex(item => item.pathname == (payload.historyTags as historyTagsConfig).pathname)
-            if(payload.type == "add") {
-                if(index == -1) {
-                    state.historyTags.historyTags.push(payload.historyTags);
-                }
-            }else if(payload.type == "delete") {
-                state.historyTags.historyTags.splice(index, 1);
-            }else if(payload.type == "deleteOthers") {
-                state.historyTags.historyTags = [payload.historyTags];
-            }else {
-                state.historyTags.historyTags = [];
+            switch(payload.type) {
+                case "add":
+                    if(index == -1) {
+                        state.historyTags.historyTags.push(payload.historyTags);
+                    }
+                    break;
+                case "delete":
+                    state.historyTags.historyTags.splice(index, 1);
+                    break;
+                case "deleteOthers":
+                    state.historyTags.historyTags = [payload.historyTags];
+                    break;
+                case "deleteAll":
+                    state.historyTags.historyTags = [];
+                    break;
+                default:
+                    break;
             }
         }
     }

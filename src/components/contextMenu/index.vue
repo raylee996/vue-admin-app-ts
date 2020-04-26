@@ -1,7 +1,7 @@
 <template>
   <div class="custom_context_menu">
     <ul>
-      <li v-for="item in menuList" :key="item.name" @click="item.callback(cbOptions)">{{item.name}}</li>
+      <li v-for="item in menuList" :key="item.name" @click="item.callback">{{item.name}}</li>
     </ul>
   </div>
 </template>
@@ -16,8 +16,7 @@ import {contextType} from "./types";
 export default class extends Vue {
 	data() {
 		return {
-			menuList: <Array<contextType>>[],
-			cbOptions: {}
+			menuList: <Array<contextType>>[]
 		}
 	}
 }
@@ -32,11 +31,11 @@ export default class extends Vue {
 	background: #fff;
 	ul li{
 		height: 25px;
-		line-height: 25px;
+        line-height: 25px;
+        padding: 0 10px;
 		font-size: 14px;
 		color: #666;
 		transition: .4s;
-		text-align: center;
 		&:hover{
 			background: #ddd;
 		}

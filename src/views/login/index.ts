@@ -1,8 +1,12 @@
 
 import { Vue, Component } from "vue-property-decorator";
+import {Mutation} from "vuex-class";
+import {SET_USERID} from "store/mutation-types";
 
 @Component
 export default class extends Vue {
+    @Mutation(SET_USERID) setUserId;
+
     remember:any = localStorage.getItem("remember");
     formProps: any = {
         username: localStorage.getItem("username") || "",
@@ -37,8 +41,8 @@ export default class extends Vue {
                                 localStorage.removeItem("password");
                                 localStorage.removeItem("remember");
                             }
-                            //执行路由跳转
-
+                            this.setUserId(res.data.data.id);
+                            this.$router.replace("/");
                         });
                         break;
                     case 2: //注册
@@ -56,7 +60,8 @@ export default class extends Vue {
                                 localStorage.removeItem("remember");
                             }
                             //执行路由跳转
-                            
+                            this.setUserId(res.data.data.id);
+                            this.$router.replace("/");
                         });
                         break;
                     default:

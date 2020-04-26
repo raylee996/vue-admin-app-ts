@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import store from "store/index";
-import { SWITCH_INIT } from "store/mutation-types";
+import { SWITCH_INIT, SET_USERID } from "store/mutation-types";
 
 Vue.use(VueRouter);
 
@@ -44,6 +44,7 @@ router.beforeEach((to, from, next) => {
 					password: localStorage.getItem("password")
 				}
 			}).then(res => {
+				store.commit(SET_USERID, res.data.data.id);
 				next();
 			}).catch(error => {
 				next('/login');

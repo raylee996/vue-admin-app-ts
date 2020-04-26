@@ -51,7 +51,10 @@ function addUser(req, res, next) {
                     if (result2) {
                         result2 = {
                             code: 1,
-                            msg: '注册成功'
+                            msg: '注册成功',
+                            data: {
+                                id: result2.insertId
+                            }
                         };
                     }
 
@@ -78,11 +81,15 @@ function signUp(req, res, next) {
         var param = req.query;
 
         // 建立连接，匹配用户名密码
-        connection.query("select username,password from user where username = '" + param.username + "' and password = '" + param.password + "'", function (err, result) {
+        connection.query("select id,username,password from user where username = '" + param.username + "' and password = '" + param.password + "'", function (err, result) {
             if (result.length > 0) {
+                console.log(result)
                 result = {
                     code: 200,
-                    msg: '登录成功'
+                    msg: '登录成功',
+                    data: {
+                        id: result[0].id
+                    }
                 };
             }else {
                 result = undefined;
