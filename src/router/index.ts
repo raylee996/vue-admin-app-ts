@@ -9,10 +9,13 @@ import layout from "components/layout/index.vue";
 
 const Routes: Array<RouteConfig> = [
 	{
-		name: "login",
+		name: "Login",
 		path: "/login",
-		component: () => import(/* webpackChunkName: "login" */"views/login/index.vue")
-	}, /* 登录页 */
+		meta: {
+			hidden: true
+		},
+		component: () => import(/* webpackChunkName: "Login" */"views/login/index.vue")
+	},
 	{
 		name: "index",
 		path: "/",
@@ -20,12 +23,39 @@ const Routes: Array<RouteConfig> = [
 		component: layout,
 		children: [
 			{
-				name: "home",
-				path: "/home",
-				component: () => import(/* webpackChunkName: home */"views/home/index.vue")
+				name: "Home",
+				path: "home",
+				meta: {
+					title: "首页"
+				},
+				component: () => import(/* webpackChunkName: Home */"views/home/index.vue")
 			}
 		]
-	} /* 总首页 */
+	},
+	{
+		name: "Goods",
+		path: "/goods",
+		redirect: "/goods/getCategories",
+		component: layout,
+		children: [
+			{
+				name: "AddCategories",
+				path: "addCategories",
+				meta: {
+					title: "添加分类"
+				},
+				component: () => import(/* webpackChunkName: AddCategories */"views/goods/addCategories.vue")
+			},
+			{
+				name: "GetCategories",
+				path: "getCategories",
+				meta: {
+					title: "分类列表"
+				},
+				component: () => import(/* webpackChunkName: GetCategories */"views/goods/getCategories.vue")
+			}
+		]
+	}
 ]
 
 const router = new VueRouter({

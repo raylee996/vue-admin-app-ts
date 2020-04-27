@@ -49,11 +49,10 @@ export default class extends Vue {
 	left: 0;
 	top: 0;
 	bottom: 0;
-	width: 250px;
+	width: 200px;
 	height: 100%;
-	transition: width .4s;
 	&.hideSidebar{
-		width: 50px;
+		width: 64px;
 	}
 }
 </style>

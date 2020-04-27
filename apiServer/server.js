@@ -6,24 +6,40 @@ var mysqlconf = {
     port: 3306
 };
 
-var sftpConf = {
+/* var sftpConf = {
     host: '111.229.220.211',
+    port: '21',
+    username: 'liweifan',
+    password: '101,LIwei'
+}; */
+/* var sftpConf = {
+    host: '120.79.98.108',
     port: '22',
     username: 'root',
-    password: '101,liweifan'
-};
-
+    password: '161cs17Bb'
+}; */
+var ftpConf = {
+    host: '111.229.220.211',
+    port: '21',
+    user: 'liweifan',
+    password: '101,LIwei'
+}
 var express = require('express');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+var multipart = require('connect-multiparty');
 var router = express.Router();
 var app = express();
+var multipartyMiddleware = multipart();
 
 var mysql = require('mysql');
 var pool = mysql.createPool(mysqlconf);
 
 var Client = require('ssh2-sftp-client');
 var sftp = new Client();
+
+var Ftp = require('ftp');
+var ftp = new Ftp();
 
 // 向前台返回JSON方法的简单封装
 var jsonWrite = function (res, ret, errmsg = "操作失败") {
@@ -194,9 +210,11 @@ router.get('/getCategories', function (req, res, next) {
 
 // 5、创建商品开始
 function addProducts(req, res, next) {
+    
+
     // 获取前台页面传过来的参数
     var param = req.body;
-    if (!param.user_id || !param.category_id) {
+    /* if (!param.user_id || !param.category_id) {
         jsonWrite(res, undefined, "参数错误");
         return;
     }
@@ -211,9 +229,26 @@ function addProducts(req, res, next) {
     if (!param.price) {
         jsonWrite(res, undefined, "价格不能为空");
         return;
-    }
-    var avatar = param.avatar.file;
-    pool.getConnection(function (err, connection) {
+    } */
+
+    var avatar = req.files.avatar;
+    /* sftp.connect(sftpConf)
+    .then(() => {
+        return sftp.fastPut(avatar.path, "/home/liweifan/web/images/" + avatar.originalFilename);
+    })
+    .then(p => {
+        console.log(`Remote working directory is ${p}`);
+        return sftp.end();
+    })
+    .catch(err => {
+        console.log(`Error: ${err.message}`); // error message will include 'example-client'
+    }); */
+    ftp.on('ready', ()=>{
+        console.log('connect to ftp ok!');
+    });
+    ftp.connect(ftpConf);
+
+    /* pool.getConnection(function (err, connection) {
         connection.query("INSERT INTO products_categories(user_id, category_name) VALUES(?,?)", [param.user_id, param.category_name], function (err2, result2) {
             if (result2) {
                 result2 = {
@@ -228,9 +263,9 @@ function addProducts(req, res, next) {
             // 释放连接 
             connection.release();
         });
-    });
+    }); */
 }
-router.post('/addProducts', function (req, res, next) {
+router.post('/addProducts', multipartyMiddleware, function (req, res, next) {
     addProducts(req, res, next);
 });
 //创建商品结束
