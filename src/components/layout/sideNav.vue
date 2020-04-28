@@ -30,6 +30,18 @@
                         <router-link to="/getArticles">文章列表</router-link>
                     </el-menu-item>
                 </el-submenu>
+
+                <template v-for="(item, index) in routes">
+                    <template v-if="item.meta && !item.meta.hidden">
+                        <el-menu-item :index="index" :key="index" v-if="item.children.length <= 1">
+                            <i :class="'el-icon'+item.icon"></i>
+                            <router-link slot="title" :to="item.path">{{item.meta.title}}</router-link>
+                        </el-menu-item>
+                        <el-submenu :index="index" :key="index" v-else>
+
+                        </el-submenu>
+                    </template>
+                </template>
             </el-menu>
         </el-scrollbar>
     </div>
@@ -37,9 +49,11 @@
 
 <script lang='ts'>
 import { Vue, Component, Prop } from "vue-property-decorator";
+import { Routes } from "router/index";
 
 @Component
 export default class extends Vue {
+    routes = Routes;
     @Prop({ type: Boolean, default: false }) readonly asideStatusHidding: boolean | undefined;
 }
 </script>

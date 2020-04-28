@@ -7,7 +7,12 @@ Vue.use(VueRouter);
 
 import layout from "components/layout/index.vue";
 
-const Routes: Array<RouteConfig> = [
+/* 
+breadcrumb:
+/goods/getCategories =》 首页 / 商品管理 / 分类列表
+*/
+
+export const Routes: Array<RouteConfig> = [
 	{
 		name: "Login",
 		path: "/login",
@@ -26,7 +31,8 @@ const Routes: Array<RouteConfig> = [
 				name: "Home",
 				path: "home",
 				meta: {
-					title: "首页"
+					title: "首页",
+					icon: 's-home'
 				},
 				component: () => import(/* webpackChunkName: Home */"views/home/index.vue")
 			}
@@ -36,6 +42,10 @@ const Routes: Array<RouteConfig> = [
 		name: "Goods",
 		path: "/goods",
 		redirect: "/goods/getCategories",
+		meta: {
+			title: "商品管理",
+			icon: 's-goods'
+		},
 		component: layout,
 		children: [
 			{
@@ -52,7 +62,68 @@ const Routes: Array<RouteConfig> = [
 				meta: {
 					title: "分类列表"
 				},
-				component: () => import(/* webpackChunkName: GetCategories */"views/goods/getCategories.vue")
+				component: () => import(/* webpackChunkName: GetCategories */"views/goods/getCategories.vue"),
+				children: [
+					{
+						name: "GetCategoriesList",
+						path: ":id",
+						meta: {
+							title: "商品列表",
+							hidden: true
+						},
+						component: () => import(/* webpackChunkName: GetCategoriesList */"views/goods/getCategoriesList.vue"),
+						children: [
+							{
+								name: "AddProducts",
+								path: "addProducts",
+								meta: {
+									title: "添加商品",
+									hidden: true,
+								},
+								component: () => import(/* webpackChunkName: AddProducts */"views/goods/addProducts.vue")
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	{
+		name: "Articles",
+		path: "/articles",
+		redirect: "/articles/getArticles",
+		meta: {
+			title: "文章管理",
+			icon: 'document'
+		},
+		component: layout,
+		children: [
+			{
+				name: "AddArticles",
+				path: "addArticles",
+				meta: {
+					title: "添加文章"
+				},
+				component: () => import(/* webpackChunkName: AddArticles */"views/articles/addArticles.vue")
+			},
+			{
+				name: "GetArticles",
+				path: "getArticles",
+				meta: {
+					title: "文章列表"
+				},
+				component: () => import(/* webpackChunkName: GetArticles */"views/articles/getArticles.vue"),
+				children: [
+					{
+						name: "ArticleDetail",
+						path: ":id",
+						meta: {
+							title: "文章详情",
+							hidden: true
+						},
+						component: () => import(/* webpackChunkName: ArticleDetail */"views/articles/articleDetail.vue"),
+					}
+				]
 			}
 		]
 	}
