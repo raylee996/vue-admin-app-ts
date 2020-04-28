@@ -39,7 +39,6 @@ var Client = require('ssh2-sftp-client');
 var sftp = new Client();
 
 var Ftp = require('ftp');
-var ftp = new Ftp();
 
 // 向前台返回JSON方法的简单封装
 var jsonWrite = function (res, ret, errmsg = "操作失败") {
@@ -209,12 +208,18 @@ router.get('/getCategories', function (req, res, next) {
 //获取商品分类结束
 
 // 5、创建商品开始
+async function upload(ftp, local, remote) {
+    return new Promise((resolve, reject) => {
+        ftp.put(local, remote, (err) => {
+            reject({err: err})
+        })
+        resolve(true)
+    })
+};
 function addProducts(req, res, next) {
-    
-
     // 获取前台页面传过来的参数
     var param = req.body;
-    /* if (!param.user_id || !param.category_id) {
+    if (!param.user_id || !param.category_id) {
         jsonWrite(res, undefined, "参数错误");
         return;
     }
@@ -229,41 +234,43 @@ function addProducts(req, res, next) {
     if (!param.price) {
         jsonWrite(res, undefined, "价格不能为空");
         return;
-    } */
+    }
 
-    var avatar = req.files.avatar;
-    /* sftp.connect(sftpConf)
-    .then(() => {
-        return sftp.fastPut(avatar.path, "/home/liweifan/web/images/" + avatar.originalFilename);
-    })
-    .then(p => {
-        console.log(`Remote working directory is ${p}`);
-        return sftp.end();
-    })
-    .catch(err => {
-        console.log(`Error: ${err.message}`); // error message will include 'example-client'
-    }); */
-    ftp.on('ready', ()=>{
-        console.log('connect to ftp ok!');
-    });
+    var images = req.files.avatar;
+    var imagesori = images.originalFilename; // 图片名称
+    var radname = Date.now()+parseInt(Math.random()*999)+parseInt(Math.random()*666) // 赋给图片的名称用时间戳+随机数获取
+    var oriname = imagesori.lastIndexOf(".");
+    var hzm = imagesori.substring(oriname,imagesori.length); // 图片后缀名
+    var pic = radname+hzm; // 拼接处一个完整的图片名称
+    var ftp = new Ftp();
     ftp.connect(ftpConf);
-
-    /* pool.getConnection(function (err, connection) {
-        connection.query("INSERT INTO products_categories(user_id, category_name) VALUES(?,?)", [param.user_id, param.category_name], function (err2, result2) {
-            if (result2) {
-                result2 = {
-                    code: 1,
-                    msg: '添加成功'
-                };
-            }
-
-            // 以json形式，把操作结果返回给前台页面
-            jsonWrite(res, result2);
-
-            // 释放连接 
-            connection.release();
+    ftp.on('ready', async ()=>{
+        console.log('connect to ftp ok!');
+        let {err} = await upload(ftp, images.path, "/home/liweifan/web/images/" + pic)
+        if(err) {
+            jsonWrite(res, undefined, "上传失败");
+            console.log("上传失败");
+            return
+        }
+        pool.getConnection(function (err, connection) {
+            connection.query("INSERT INTO products(user_id, category_id, product_name, description, stock, price, avatar) VALUES(?,?,?,?,?,?,?)", [param.user_id, param.category_id, param.product_name, param.description, param.stock, param.price, pic], function (err2, result2) {
+                if (result2) {
+                    result2 = {
+                        code: 1,
+                        msg: '添加成功'
+                    };
+                    console.log("上传成功");
+                }
+                // 以json形式，把操作结果返回给前台页面
+                jsonWrite(res, result2);
+                
+                // 释放连接 
+                connection.release();
+            });
         });
-    }); */
+    }).on("error", async (e)=> {
+        console.log("error:" + e);
+    });
 }
 router.post('/addProducts', multipartyMiddleware, function (req, res, next) {
     addProducts(req, res, next);
