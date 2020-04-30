@@ -26,13 +26,17 @@ export const Routes: Array<RouteConfig> = [
 		path: "/",
 		redirect: "/home",
 		component: layout,
+		meta: {
+			title: "首页",
+			icon: 's-home'
+		},
 		children: [
 			{
 				name: "Home",
 				path: "home",
 				meta: {
 					title: "首页",
-					icon: 's-home'
+					hidden: true
 				},
 				component: () => import(/* webpackChunkName: Home */"views/home/index.vue")
 			}

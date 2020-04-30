@@ -6,7 +6,14 @@
                 <el-breadcrumb-item to="/">
                     首页
                 </el-breadcrumb-item>
-                
+                <template v-if="routes.length && routes[0].meta.title != '首页'">
+                    <el-breadcrumb-item v-for="item in routes.slice(0, routes.length-1)" :key="item.path" :to="item.path">
+                        {{item.meta.title}}
+                    </el-breadcrumb-item>
+                    <el-breadcrumb-item :to="routes[routes.length-1].path">
+                        {{routes[routes.length-1].meta.title}}
+                    </el-breadcrumb-item>
+                </template>
             </el-breadcrumb>
         </div>
         <history-tags></history-tags>
@@ -24,6 +31,7 @@ import eventBus from "utils/eventBus";
     }
 })
 export default class extends Vue {
+    routes: Array<any> = this.$route.matched;
     asideStatusHidding: boolean = false;
     
     switchSidebar(event) {
