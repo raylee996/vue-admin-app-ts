@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import state from "./state";
 import mutations from "./mutations";
 import historyTags from "./historyTags";
+import user from "./user";
 
 Vue.use(Vuex);
 
@@ -14,6 +15,7 @@ export default new Vuex.Store({
 	actions: {
 	},
 	modules: {
-		historyTags: historyTags
+		historyTags: historyTags,
+		user: user
 	}
 })

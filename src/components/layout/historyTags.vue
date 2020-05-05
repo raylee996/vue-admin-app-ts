@@ -20,7 +20,7 @@
 
 <script lang='ts'>
 import { Vue, Component } from "vue-property-decorator";
-import { State, Mutation, namespace } from "vuex-class";
+import { namespace } from "vuex-class";
 import * as types from "store/mutation-types";
 import ContextMenu from "components/contextMenu";
 
@@ -28,7 +28,7 @@ const HistoryTagsModule = namespace("historyTags");
 
 @Component
 export default class extends Vue {
-    @State("historyTags") historyTags;
+    @HistoryTagsModule.State("historyTags") historyTags;
     @HistoryTagsModule.Mutation("updateHistoryTags") updateHistoryTags;
 
     private switchRoute(index, modulePayload) {
@@ -50,11 +50,7 @@ export default class extends Vue {
                 {
                     name: "刷新",
                     callback: () => {
-                        this.updateHistoryTags({type: 'delete', historyTags: {pathname: item.pathname}});
                         this.$router.replace(item.path);
-                        this.$nextTick(() => {
-                            this.updateHistoryTags({type: 'add', historyTags: {path: item.path, pathname: item.pathname}});
-                        })
                     }
                 },{
                     name: "关闭",

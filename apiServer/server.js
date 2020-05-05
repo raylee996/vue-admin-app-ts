@@ -52,6 +52,16 @@ var jsonWrite = function (res, ret, errmsg = "操作失败") {
     }
 };
 
+// 上传ftp简单封装
+async function upload(ftp, local, remote) {
+    return new Promise((resolve, reject) => {
+        ftp.put(local, remote, (err) => {
+            reject({err: err})
+        })
+        resolve(true)
+    })
+};
+
 // 1、注册开始
 function addUser(req, res, next) {
     // 获取前台页面传过来的参数
@@ -108,7 +118,6 @@ function signUp(req, res, next) {
         // 建立连接，匹配用户名密码
         connection.query("select id,username,password from user where username = '" + param.username + "' and password = '" + param.password + "'", function (err, result) {
             if (result.length > 0) {
-                console.log(result)
                 result = {
                     code: 200,
                     msg: '登录成功',
@@ -133,7 +142,89 @@ router.get('/signUp', function (req, res, next) {
 });
 //登录结束
 
-// 3、创建商品分类开始
+// 3、编辑用户信息开始
+function editUser(req, res, next) {
+    pool.getConnection(function (err, connection) {
+        // 获取前台页面传过来的参数
+        var param = req.body;
+
+        var images = req.files.avatar;
+        var imagesori = images.originalFilename; // 图片名称
+        var radname = Date.now()+parseInt(Math.random()*999)+parseInt(Math.random()*666) // 赋给图片的名称用时间戳+随机数获取
+        var oriname = imagesori.lastIndexOf(".");
+        var hzm = imagesori.substring(oriname,imagesori.length); // 图片后缀名
+        var pic = radname+hzm; // 拼接处一个完整的图片名称
+        var ftp = new Ftp();
+        ftp.connect(ftpConf);
+        ftp.on('ready', async ()=>{
+            console.log('connect to ftp ok!');
+            let {err} = await upload(ftp, images.path, "/home/liweifan/web/images/user/" + pic)
+            if(err) {
+                jsonWrite(res, undefined, "图片上传失败");
+                return
+            }
+            pool.getConnection(function (err, connection) {
+                connection.query("UPDATE user SET nickname = '"+param.nickname+"',avatar = '"+param.avatar+"' WHERE id = '"+param.id+"'", function (err2, result2) {
+                    if (result2) {
+                        result2 = {
+                            code: 1,
+                            msg: '编辑成功'
+                        };
+                    }else {
+                        result = undefined;
+                    }
+                    // 以json形式，把操作结果返回给前台页面
+                    jsonWrite(res, result2, "用户不存在");
+                    
+                    // 释放连接 
+                    connection.release();
+                });
+            });
+        }).on("error", async (e)=> {
+            console.log("error:" + e);
+        });
+    });
+}
+router.post('/editUser', function (req, res, next) {
+    editUser(req, res, next);
+});
+//编辑用户信息结束
+
+// 4、获取用户信息开始
+function getUser(req, res, next) {
+    pool.getConnection(function (err, connection) {
+        // 获取前台页面传过来的参数
+        var param = req.query;
+
+        // 建立连接，匹配用户名密码
+        connection.query("select nickname,avatar from user where id = '" + param.id + "'", function (err, result) {
+            if (result.length > 0) {
+                result = {
+                    code: 200,
+                    msg: 'success',
+                    data: {
+                        nickname: result[0].nickname,
+                        avatar: "http://111.229.220.211:8090/images/user/"+result[0].avatar
+                    }
+                };
+            }else {
+                result = undefined;
+            }
+
+            // 以json形式，把操作结果返回给前台页面
+            jsonWrite(res, result, "用户不存在");
+
+            // 释放连接 
+            connection.release();
+        });
+    });
+}
+router.get('/getUser', function (req, res, next) {
+    getUser(req, res, next);
+});
+//获取用户信息结束
+
+// 5、创建商品分类开始
 function addProductsCategories(req, res, next) {
     // 获取前台页面传过来的参数
     var param = req.body;
@@ -177,7 +268,7 @@ router.post('/addProductsCategories', function (req, res, next) {
 });
 //创建商品分类结束
 
-// 4、获取商品分类开始
+// 6、获取商品分类开始
 function getCategories(req, res, next) {
     pool.getConnection(function (err, connection) {
         // 获取前台页面传过来的参数
@@ -207,15 +298,7 @@ router.get('/getCategories', function (req, res, next) {
 });
 //获取商品分类结束
 
-// 5、创建商品开始
-async function upload(ftp, local, remote) {
-    return new Promise((resolve, reject) => {
-        ftp.put(local, remote, (err) => {
-            reject({err: err})
-        })
-        resolve(true)
-    })
-};
+// 7、创建商品开始
 function addProducts(req, res, next) {
     // 获取前台页面传过来的参数
     var param = req.body;
@@ -246,10 +329,9 @@ function addProducts(req, res, next) {
     ftp.connect(ftpConf);
     ftp.on('ready', async ()=>{
         console.log('connect to ftp ok!');
-        let {err} = await upload(ftp, images.path, "/home/liweifan/web/images/" + pic)
+        let {err} = await upload(ftp, images.path, "/home/liweifan/web/images/products/" + pic)
         if(err) {
             jsonWrite(res, undefined, "上传失败");
-            console.log("上传失败");
             return
         }
         pool.getConnection(function (err, connection) {

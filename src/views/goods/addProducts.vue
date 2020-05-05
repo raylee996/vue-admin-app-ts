@@ -1,5 +1,5 @@
 <template>
-  <div class=''>home</div>
+  <div class=''></div>
 </template>
 
 <script lang='ts'>
@@ -11,3 +11,4 @@ export default class extends Vue {
 </script>
 <style lang='less' scoped>
 </style>
+

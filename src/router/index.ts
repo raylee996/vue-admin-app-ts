@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import store from "store/index";
 import { SWITCH_INIT, SET_USERID } from "store/mutation-types";
+import {setUserinfo} from "utils/user";
 
 Vue.use(VueRouter);
 
@@ -22,6 +23,25 @@ export const Routes: Array<RouteConfig> = [
 		component: () => import(/* webpackChunkName: "Login" */"views/login/index.vue")
 	},
 	{
+		name: "profile",
+		path: "/profile",
+		redirect: "/profile/my",
+		meta: {
+			hidden: true
+		},
+		component: layout,
+		children: [
+			{
+				name: "my",
+				path: "/profile/my",
+				meta: {
+					affix: true
+				},
+				component: () => import(/* webpackChunkName: profile */"views/profile/index.vue")
+			}
+		]
+	},
+	{
 		name: "index",
 		path: "/",
 		redirect: "/home",
@@ -36,7 +56,8 @@ export const Routes: Array<RouteConfig> = [
 				path: "home",
 				meta: {
 					title: "首页",
-					hidden: true
+					hidden: true,
+					affix: true
 				},
 				component: () => import(/* webpackChunkName: Home */"views/home/index.vue")
 			}
@@ -54,35 +75,39 @@ export const Routes: Array<RouteConfig> = [
 		children: [
 			{
 				name: "AddCategories",
-				path: "addCategories",
+				path: "/goods/addCategories",
 				meta: {
-					title: "添加分类"
+					title: "添加分类",
+					affix: true
 				},
 				component: () => import(/* webpackChunkName: AddCategories */"views/goods/addCategories.vue")
 			},
 			{
 				name: "GetCategories",
-				path: "getCategories",
+				path: "/goods/getCategories",
 				meta: {
-					title: "分类列表"
+					title: "分类列表",
+					affix: true
 				},
 				component: () => import(/* webpackChunkName: GetCategories */"views/goods/getCategories.vue"),
 				children: [
 					{
 						name: "GetCategoriesList",
-						path: ":id",
+						path: "/goods/getCategories/:id",
 						meta: {
 							title: "商品列表",
-							hidden: true
+							hidden: true,
+							affix: true
 						},
 						component: () => import(/* webpackChunkName: GetCategoriesList */"views/goods/getCategoriesList.vue"),
 						children: [
 							{
 								name: "AddProducts",
-								path: "addProducts",
+								path: "/goods/getCategories/:id/addProducts",
 								meta: {
 									title: "添加商品",
 									hidden: true,
+									affix: true
 								},
 								component: () => import(/* webpackChunkName: AddProducts */"views/goods/addProducts.vue")
 							}
@@ -106,7 +131,8 @@ export const Routes: Array<RouteConfig> = [
 				name: "AddArticles",
 				path: "addArticles",
 				meta: {
-					title: "添加文章"
+					title: "添加文章",
+					affix: true
 				},
 				component: () => import(/* webpackChunkName: AddArticles */"views/articles/addArticles.vue")
 			},
@@ -114,7 +140,8 @@ export const Routes: Array<RouteConfig> = [
 				name: "GetArticles",
 				path: "getArticles",
 				meta: {
-					title: "文章列表"
+					title: "文章列表",
+					affix: true
 				},
 				component: () => import(/* webpackChunkName: GetArticles */"views/articles/getArticles.vue"),
 				children: [
@@ -123,7 +150,8 @@ export const Routes: Array<RouteConfig> = [
 						path: ":id",
 						meta: {
 							title: "文章详情",
-							hidden: true
+							hidden: true,
+							affix: true
 						},
 						component: () => import(/* webpackChunkName: ArticleDetail */"views/articles/articleDetail.vue"),
 					}
@@ -139,6 +167,14 @@ const router = new VueRouter({
 	routes: Routes
 });
 
+function addHistoryTags(affix, pathname, path) {
+	if(!affix) return;
+	let index = store.getters("historyTags/historyTags").indexOf(pathname);
+	if(index == -1) {
+		store.commit("historyTags/updateHistoryTags", {type: "add", historyTags: {path, pathname}});
+	}
+}
+
 router.beforeEach((to, from, next) => {
 	if (store.state.init == 0) {
 		store.commit(SWITCH_INIT, 1)
@@ -150,7 +186,13 @@ router.beforeEach((to, from, next) => {
 				}
 			}).then(res => {
 				store.commit(SET_USERID, res.data.data.id);
-				next();
+				setUserinfo(res.data.data.id);
+				addHistoryTags(from.meta.affix, from.name, from.path)
+				if(from.path == "/login") {
+					next("/");
+				}else {
+					next();
+				}
 			}).catch(error => {
 				next('/login');
 			})
@@ -158,6 +200,7 @@ router.beforeEach((to, from, next) => {
 			next('/login');
 		}
 	} else {
+		addHistoryTags(from.meta.affix, from.name, from.path)
 		next();
 	}
 })

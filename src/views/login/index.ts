@@ -1,7 +1,7 @@
-
 import { Vue, Component } from "vue-property-decorator";
 import {Mutation} from "vuex-class";
 import {SET_USERID} from "store/mutation-types";
+import {setUserinfo} from "utils/user";
 
 @Component
 export default class extends Vue {
@@ -42,6 +42,7 @@ export default class extends Vue {
                                 localStorage.removeItem("remember");
                             }
                             this.setUserId(res.data.data.id);
+                            setUserinfo(res.data.data.id);
                             this.$router.replace("/");
                         });
                         break;
@@ -61,6 +62,7 @@ export default class extends Vue {
                             }
                             //执行路由跳转
                             this.setUserId(res.data.data.id);
+                            setUserinfo(res.data.data.id);
                             this.$router.replace("/");
                         });
                         break;
