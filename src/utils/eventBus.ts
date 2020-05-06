@@ -1,4 +1,2 @@
-import { Vue, Component } from "vue-property-decorator";
-
-@Component
-export default class extends Vue { };
+import Vue from 'vue';  
+export default new Vue(); 

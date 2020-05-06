@@ -18,7 +18,7 @@
 
 <script lang='ts'>
 import { Vue, Component } from "vue-property-decorator";
-import {Getter, namespace} from "vuex-class";
+import {namespace} from "vuex-class";
 import sideNav from "./sideNav.vue";
 import adminHeader from "./header.vue";
 import eventBus from "utils/eventBus";

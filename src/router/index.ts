@@ -8,11 +8,6 @@ Vue.use(VueRouter);
 
 import layout from "components/layout/index.vue";
 
-/* 
-breadcrumb:
-/goods/getCategories =》 首页 / 商品管理 / 分类列表
-*/
-
 export const Routes: Array<RouteConfig> = [
 	{
 		name: "Login",
@@ -37,7 +32,7 @@ export const Routes: Array<RouteConfig> = [
 				meta: {
 					affix: true
 				},
-				component: () => import(/* webpackChunkName: profile */"views/profile/index.vue")
+				component: () => import(/* webpackChunkName: "profile" */"views/profile/index.vue")
 			}
 		]
 	},
@@ -59,7 +54,7 @@ export const Routes: Array<RouteConfig> = [
 					hidden: true,
 					affix: true
 				},
-				component: () => import(/* webpackChunkName: Home */"views/home/index.vue")
+				component: () => import(/* webpackChunkName: "Home" */"views/home/index.vue")
 			}
 		]
 	},
@@ -80,7 +75,7 @@ export const Routes: Array<RouteConfig> = [
 					title: "添加分类",
 					affix: true
 				},
-				component: () => import(/* webpackChunkName: AddCategories */"views/goods/addCategories.vue")
+				component: () => import(/* webpackChunkName: "AddCategories" */"views/goods/addCategories.vue")
 			},
 			{
 				name: "GetCategories",
@@ -89,7 +84,7 @@ export const Routes: Array<RouteConfig> = [
 					title: "分类列表",
 					affix: true
 				},
-				component: () => import(/* webpackChunkName: GetCategories */"views/goods/getCategories.vue"),
+				component: () => import(/* webpackChunkName: "GetCategories" */"views/goods/getCategories.vue"),
 				children: [
 					{
 						name: "GetCategoriesList",
@@ -99,7 +94,7 @@ export const Routes: Array<RouteConfig> = [
 							hidden: true,
 							affix: true
 						},
-						component: () => import(/* webpackChunkName: GetCategoriesList */"views/goods/getCategoriesList.vue"),
+						component: () => import(/* webpackChunkName: "GetCategoriesList" */"views/goods/getCategoriesList.vue"),
 						children: [
 							{
 								name: "AddProducts",
@@ -109,7 +104,7 @@ export const Routes: Array<RouteConfig> = [
 									hidden: true,
 									affix: true
 								},
-								component: () => import(/* webpackChunkName: AddProducts */"views/goods/addProducts.vue")
+								component: () => import(/* webpackChunkName: "AddProducts" */"views/goods/addProducts.vue")
 							}
 						]
 					}
@@ -134,7 +129,7 @@ export const Routes: Array<RouteConfig> = [
 					title: "添加文章",
 					affix: true
 				},
-				component: () => import(/* webpackChunkName: AddArticles */"views/articles/addArticles.vue")
+				component: () => import(/* webpackChunkName: "AddArticles" */"views/articles/addArticles.vue")
 			},
 			{
 				name: "GetArticles",
@@ -143,7 +138,7 @@ export const Routes: Array<RouteConfig> = [
 					title: "文章列表",
 					affix: true
 				},
-				component: () => import(/* webpackChunkName: GetArticles */"views/articles/getArticles.vue"),
+				component: () => import(/* webpackChunkName: "GetArticles" */"views/articles/getArticles.vue"),
 				children: [
 					{
 						name: "ArticleDetail",
@@ -153,7 +148,7 @@ export const Routes: Array<RouteConfig> = [
 							hidden: true,
 							affix: true
 						},
-						component: () => import(/* webpackChunkName: ArticleDetail */"views/articles/articleDetail.vue"),
+						component: () => import(/* webpackChunkName: "ArticleDetail" */"views/articles/articleDetail.vue"),
 					}
 				]
 			}

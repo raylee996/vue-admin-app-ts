@@ -1,11 +1,12 @@
 import { Vue, Component } from "vue-property-decorator";
 import {Mutation} from "vuex-class";
-import {SET_USERID} from "store/mutation-types";
+import {SET_USERID, SWITCH_INIT} from "store/mutation-types";
 import {setUserinfo} from "utils/user";
 
 @Component
 export default class extends Vue {
     @Mutation(SET_USERID) setUserId;
+    @Mutation(SWITCH_INIT) switchInit;
 
     remember:any = localStorage.getItem("remember");
     formProps: any = {
@@ -26,7 +27,8 @@ export default class extends Vue {
             if(valid) {
                 switch(type) {
                     case 1: //登录
-                        this.$http.get("/api/addUser", {
+                        this.switchInit(1)
+                        this.$http.get("/api/signUp", {
                             params: {
                                 username: this.formProps.username,
                                 password: this.formProps.password
@@ -47,7 +49,8 @@ export default class extends Vue {
                         });
                         break;
                     case 2: //注册
-                        this.$http.post("/api/signUp", {
+                        this.switchInit(1)
+                        this.$http.post("/api/addUser", {
                             username: this.formProps.username,
                             password: this.formProps.password
                         }).then(res => {

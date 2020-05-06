@@ -7,26 +7,26 @@ export default {
     },
     getters: {
         historyTags: (state, getters, rootState) => {
-            return state.historyTags.historyTags.map(item => item.pathname);
+            return state.historyTags.map(item => item.pathname);
         }
     },
     mutations: {
         updateHistoryTags(state, payload:historyTagsPayload) {
-            let index = state.historyTags.historyTags.findIndex(item => item.pathname == (payload.historyTags as historyTagsConfig).pathname)
+            let index = state.historyTags.findIndex(item => item.pathname == (payload.historyTags as historyTagsConfig).pathname)
             switch(payload.type) {
                 case "add":
                     if(index == -1) {
-                        state.historyTags.historyTags.push(payload.historyTags);
+                        state.historyTags.push(payload.historyTags);
                     }
                     break;
                 case "delete":
-                    state.historyTags.historyTags.splice(index, 1);
+                    state.historyTags.splice(index, 1);
                     break;
                 case "deleteOthers":
-                    state.historyTags.historyTags = [payload.historyTags];
+                    state.historyTags = [payload.historyTags];
                     break;
                 case "deleteAll":
-                    state.historyTags.historyTags = [];
+                    state.historyTags = [];
                     break;
                 default:
                     break;

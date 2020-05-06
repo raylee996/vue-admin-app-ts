@@ -35,8 +35,8 @@ var multipartyMiddleware = multipart();
 var mysql = require('mysql');
 var pool = mysql.createPool(mysqlconf);
 
-var Client = require('ssh2-sftp-client');
-var sftp = new Client();
+/* var Client = require('ssh2-sftp-client');
+var sftp = new Client(); */
 
 var Ftp = require('ftp');
 
@@ -204,7 +204,7 @@ function getUser(req, res, next) {
                     msg: 'success',
                     data: {
                         nickname: result[0].nickname,
-                        avatar: "http://111.229.220.211:8090/images/user/"+result[0].avatar
+                        avatar: result[0].avatar ? "http://111.229.220.211:8090/images/user/"+result[0].avatar : result[0].avatar
                     }
                 };
             }else {

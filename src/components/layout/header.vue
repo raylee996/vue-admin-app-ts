@@ -6,19 +6,19 @@
                 <el-breadcrumb-item to="/">
                     首页
                 </el-breadcrumb-item>
-                <template v-if="routes.length && routes[0].meta.title != '首页'">
-                    <el-breadcrumb-item v-for="item in routes.slice(0, routes.length-1)" :key="item.path" :to="item.path">
+                <template v-if="$route.matched.length && $route.matched[0].meta.title != '首页'">
+                    <el-breadcrumb-item v-for="item in $route.matched.slice(0, routes.length-1)" :key="item.path" :to="item.path">
                         {{item.meta.title}}
                     </el-breadcrumb-item>
                     <el-breadcrumb-item>
-                        {{routes[routes.length-1].meta.title}}
+                        {{$route.matched[routes.length-1].meta.title}}
                     </el-breadcrumb-item>
                 </template>
             </el-breadcrumb>
             <el-dropdown class="profile">
                 <div class="el-dropdown-link">
-                    <el-avatar :src="user.avatar" icon="el-icon-user-solid"></el-avatar>
-                    {{user.nickname}}
+                    <el-avatar :src="avatar" icon="el-icon-user-solid"></el-avatar>
+                    {{nickname}}
                     <i class="el-icon-arrow-down el-icon--right"></i>
                 </div>
                 <el-dropdown-menu slot="dropdown">
@@ -44,12 +44,13 @@ const UserModule = namespace("user");
 @Component({
     components: {
         HistoryTags
-    }
+    },
 })
 export default class extends Vue {
-    routes: Array<any> = this.$route.matched;
+    // routes: Array<any> = this.$route.matched;
     asideStatusHidding: boolean = false;
-    @UserModule.State user;
+    @UserModule.State("avatar") avatar;
+    @UserModule.State("nickname") nickname;
     
     switchSidebar(event) {
         (eventBus as any).$emit("switchSidebar", !this.asideStatusHidding);
