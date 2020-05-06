@@ -53,7 +53,7 @@ var jsonWrite = function (res, ret, errmsg = "操作失败") {
 };
 
 // 上传ftp简单封装
-async function upload(ftp, local, remote) {
+function upload(ftp, local, remote) {
     return new Promise((resolve, reject) => {
         ftp.put(local, remote, (err) => {
             reject({err: err})
@@ -158,7 +158,7 @@ function editUser(req, res, next) {
         ftp.connect(ftpConf);
         ftp.on('ready', async ()=>{
             console.log('connect to ftp ok!');
-            let {err} = await upload(ftp, images.path, "/home/liweifan/web/images/user/" + pic)
+            let {err} = upload(ftp, images.path, "/home/liweifan/web/images/user/" + pic)
             if(err) {
                 jsonWrite(res, undefined, "图片上传失败");
                 return
@@ -329,7 +329,7 @@ function addProducts(req, res, next) {
     ftp.connect(ftpConf);
     ftp.on('ready', async ()=>{
         console.log('connect to ftp ok!');
-        let {err} = await upload(ftp, images.path, "/home/liweifan/web/images/products/" + pic)
+        let {err} = upload(ftp, images.path, "/home/liweifan/web/images/products/" + pic)
         if(err) {
             jsonWrite(res, undefined, "上传失败");
             return
