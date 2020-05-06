@@ -1,6 +1,6 @@
 <template>
     <div class="historyTags">
-        <el-scrollbar style="height: 100%;">
+        <el-scrollbar>
             <ul>
                 <router-link key="/" to="/" v-slot="{ href, route, navigate, isActive }">
                     <li :class="[isActive && 'active']">
@@ -79,9 +79,9 @@ export default class extends Vue {
 <style lang='less' scoped>
 .historyTags{
     width: 100%;
-    height: 30px;
-    padding: 5px;
+    padding: 5px 10px;
     box-sizing: border-box;
+    border-bottom: 1px solid #eee;
     .el-scrollbar .el-scrollbar__wrap .el-scrollbar__view{
         white-space: nowrap;
     }

@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <div class="header_main">
-            <i class="fold_btn" :class="[asideStatusHidding ? 'el-icon-s-unfold' : 'el-icon-s-fold']" @click="switchSidebar"></i> 
+            <i class="fold_btn" :class="[asideStatusHidding ? 'el-icon-s-unfold' : 'el-icon-s-fold']" @click="switchSidebar($event)"></i> 
             <el-breadcrumb class="breadcrumb" separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item to="/">
                     首页
@@ -53,7 +53,8 @@ export default class extends Vue {
     @UserModule.State("nickname") nickname;
     
     switchSidebar(event) {
-        (eventBus as any).$emit("switchSidebar", !this.asideStatusHidding);
+        this.asideStatusHidding = !this.asideStatusHidding;
+        (eventBus as any).$emit("switchSidebar", this.asideStatusHidding);
     }
     logout() {
         localStorage.removeItem("username");
@@ -68,6 +69,7 @@ export default class extends Vue {
     .header_main{
         height: 50px;
         position: relative;
+        box-shadow: 0 1px 4px rgba(0,21,41,.08);
         .fold_btn{
             position: absolute;
             left: 20px;

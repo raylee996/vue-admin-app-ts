@@ -8,7 +8,6 @@ import { AxiosInstance } from "axios";
 import axiosInstance from "utils/ajax";
 import "style/reset.css";
 import 'element-ui/lib/theme-chalk/index.css';
-import NavList from "router/navList";
 
 declare module "vue/types/vue" {
   interface Vue {
@@ -17,7 +16,6 @@ declare module "vue/types/vue" {
 }
 
 Vue.use(ElementUI)
-Vue.use(NavList)
 
 Vue.prototype.$http = axiosInstance;
 

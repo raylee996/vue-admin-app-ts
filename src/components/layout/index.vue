@@ -3,8 +3,8 @@
 		<el-aside class="el_side" :class="[asideStatusHidding && 'hideSidebar']">
 			<side-nav :asideStatusHidding="asideStatusHidding" />
 		</el-aside>
-		<el-container>
-			<el-header>
+		<el-container class="el_body" :class="[asideStatusHidding && 'hideSidebar']">
+			<el-header style="height: auto;padding: 0;">
 				<admin-header />
 			</el-header>
 			<el-main>
@@ -35,6 +35,9 @@ export default class extends Vue {
 	asideStatusHidding: boolean = false;
 	@HistoryTagsModule.Getter("historyTags") historyTags;
 
+	created() {
+        (eventBus as any).$off('switchSidebar');
+    }
 	mounted() {
 		(eventBus as any).$on("switchSidebar", status => {
 			this.asideStatusHidding = status;
@@ -49,10 +52,16 @@ export default class extends Vue {
 	left: 0;
 	top: 0;
 	bottom: 0;
-	width: 200px;
+	width: 200px !important;
 	height: 100%;
 	&.hideSidebar{
-		width: 64px;
+		width: 64px !important;
+	}
+}
+.el_body{
+	margin-left: 200px;
+	&.hideSidebar{
+		margin-left: 64px;
 	}
 }
 </style>
