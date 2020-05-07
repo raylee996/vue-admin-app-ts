@@ -7,11 +7,11 @@
                     首页
                 </el-breadcrumb-item>
                 <template v-if="$route.matched.length && $route.matched[0].meta.title != '首页'">
-                    <el-breadcrumb-item v-for="item in $route.matched.slice(0, routes.length-1)" :key="item.path" :to="item.path">
+                    <el-breadcrumb-item v-for="item in $route.matched.slice(0, $route.matched.length-1)" :key="item.path" :to="item.path">
                         {{item.meta.title}}
                     </el-breadcrumb-item>
                     <el-breadcrumb-item>
-                        {{$route.matched[routes.length-1].meta.title}}
+                        {{$route.matched[$route.matched.length-1].meta.title}}
                     </el-breadcrumb-item>
                 </template>
             </el-breadcrumb>

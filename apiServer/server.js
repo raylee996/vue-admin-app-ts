@@ -275,11 +275,12 @@ function getCategories(req, res, next) {
         var param = req.query;
 
         // 建立连接，匹配用户名密码
-        connection.query("select user_id from products_categories where user_id = '" + param.user_id + "'", function (err, result) {
+        connection.query("select id,category_name from products_categories where user_id = '" + param.user_id + "'", function (err, result) {
             if (result.length > 0) {
                 result = {
-                    code: 200,
-                    msg: '获取成功'
+                    code: 1,
+                    msg: '获取成功',
+                    list: result
                 };
             }else {
                 result = undefined;

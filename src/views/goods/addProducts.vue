@@ -1,11 +1,13 @@
 <template>
-  <div class=''></div>
+  <div class=''>{{$route.params.id}}</div>
 </template>
 
 <script lang='ts'>
 import {Vue, Component} from 'vue-property-decorator';
 
-@Component
+@Component({
+  name: "AddProducts"
+})
 export default class extends Vue {
 }
 </script>

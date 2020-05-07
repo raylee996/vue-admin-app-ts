@@ -85,30 +85,27 @@ export const Routes: Array<RouteConfig> = [
 					affix: true
 				},
 				component: () => import(/* webpackChunkName: "GetCategories" */"views/goods/getCategories.vue"),
-				children: [
-					{
-						name: "GetCategoriesList",
-						path: "/goods/getCategories/:id",
-						meta: {
-							title: "商品列表",
-							hidden: true,
-							affix: true
-						},
-						component: () => import(/* webpackChunkName: "GetCategoriesList" */"views/goods/getCategoriesList.vue"),
-						children: [
-							{
-								name: "AddProducts",
-								path: "/goods/getCategories/:id/addProducts",
-								meta: {
-									title: "添加商品",
-									hidden: true,
-									affix: true
-								},
-								component: () => import(/* webpackChunkName: "AddProducts" */"views/goods/addProducts.vue")
-							}
-						]
-					}
-				]
+			},
+			{
+				name: "GetProductList",
+				path: "/goods/getCategories/:id",
+				meta: {
+					title: "商品列表",
+					hidden: true,
+					affix: true
+				},
+				component: () => import(/* webpackChunkName: "GetProductsList" */"views/goods/getProductsList.vue"),
+				
+			},
+			{
+				name: "AddProducts",
+				path: "/goods/getCategories/:id/addProducts",
+				meta: {
+					title: "添加商品",
+					hidden: true,
+					affix: true
+				},
+				component: () => import(/* webpackChunkName: "AddProducts" */"views/goods/addProducts.vue")
 			}
 		]
 	},
@@ -124,7 +121,7 @@ export const Routes: Array<RouteConfig> = [
 		children: [
 			{
 				name: "AddArticles",
-				path: "addArticles",
+				path: "/articles/addArticles",
 				meta: {
 					title: "添加文章",
 					affix: true
@@ -133,24 +130,22 @@ export const Routes: Array<RouteConfig> = [
 			},
 			{
 				name: "GetArticles",
-				path: "getArticles",
+				path: "/articles/getArticles",
 				meta: {
 					title: "文章列表",
 					affix: true
 				},
-				component: () => import(/* webpackChunkName: "GetArticles" */"views/articles/getArticles.vue"),
-				children: [
-					{
-						name: "ArticleDetail",
-						path: ":id",
-						meta: {
-							title: "文章详情",
-							hidden: true,
-							affix: true
-						},
-						component: () => import(/* webpackChunkName: "ArticleDetail" */"views/articles/articleDetail.vue"),
-					}
-				]
+				component: () => import(/* webpackChunkName: "GetArticles" */"views/articles/getArticles.vue")
+			},
+			{
+				name: "ArticleDetail",
+				path: "/articles/getArticles/:id",
+				meta: {
+					title: "文章详情",
+					hidden: true,
+					affix: true
+				},
+				component: () => import(/* webpackChunkName: "ArticleDetail" */"views/articles/articleDetail.vue"),
 			}
 		]
 	}
@@ -164,7 +159,7 @@ const router = new VueRouter({
 
 function addHistoryTags(affix, pathname, path) {
 	if(!affix) return;
-	let index = store.getters("historyTags/historyTags").indexOf(pathname);
+	let index = store.getters["historyTags/historyTags"].indexOf(pathname);
 	if(index == -1) {
 		store.commit("historyTags/updateHistoryTags", {type: "add", historyTags: {path, pathname}});
 	}
